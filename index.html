@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Doctor Diagnosis System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 24px;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 680px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+            font-size: clamp(2rem, 6vw, 2.7rem);
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            color: #664d03;
+            border: 1px solid #ffecb5;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 14px 0 18px;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.45;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:focus-visible {
+            outline: 3px solid #4ecdc4;
+            outline-offset: 3px;
+        }
+
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #664d03;
+            border: 1px solid #ffecb5;
+        }
+
+        .terminal {
+            background: #1e1e1e;
+            color: #69f08f;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: "Courier New", monospace;
+            margin: 20px 0;
+            min-height: 260px;
+            max-height: 360px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            text-align: left;
+            line-height: 1.45;
+        }
+
+        .form-group {
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+            color: #555;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #4ecdc4;
+        }
+
+        .symptom-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .voice-btn {
+            margin: 0;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .voice-btn.listening {
+            background: linear-gradient(45deg, #e63946, #f77f00);
+            box-shadow: 0 8px 18px rgba(230, 57, 70, 0.25);
+        }
+
+        .voice-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.65;
+            transform: none;
+        }
+
+        .voice-status {
+            color: #555;
+            font-size: 0.9rem;
+            min-height: 1.3em;
+        }
+
+        .payment-panel {
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 14px;
+            margin-top: 10px;
+            background: #fafafa;
+        }
+
+        .payment-field {
+            margin-top: 12px;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .payment-note {
+            color: #666;
+            font-size: 0.88rem;
+            line-height: 1.4;
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 14px;
+                align-items: flex-start;
+            }
+
+            .container {
+                padding: 1.25rem;
+            }
+
+            .btn {
+                width: 100%;
+                margin: 8px 0;
+                padding: 14px 18px;
+            }
+
+            .symptom-tools {
+                display: block;
+            }
+
+            .voice-btn {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+
+            .payment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1>AI Doctor Diagnosis</h1>
+        <p class="subtitle">AI-powered symptom checking </p>
+
+        <div class="disclaimer">
+            For severe symptoms, urgent concerns, pregnancy, children, allergies, or existing conditions, contact a licensed clinician.
+        </div>
+
+        <section id="welcomeSection">
+            <button id="startBtn" class="btn" type="button">Start Consultation</button>
+        </section>
+
+        <section id="patientForm" class="hidden">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" placeholder="Enter your full name" autocomplete="name">
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" placeholder="Enter your age" min="1" max="120">
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender">
+                    <option value="">Select gender</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                    <option value="Other">Other / Prefer not to say</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="symptoms">Symptoms:</label>
+                <textarea id="symptoms" rows="4" placeholder="Example: headache, fever, cough"></textarea>
+                <div class="symptom-tools">
+                    <button id="voiceSymptoms" class="btn voice-btn" type="button">Speak Symptoms</button>
+                    <span id="voiceStatus" class="voice-status" aria-live="polite"></span>
+                </div>
+            </div>
+            <button id="submitDetails" class="btn" type="button">Submit Details</button>
+        </section>
+
+        <section id="diagnosisSection" class="hidden">
+            <div class="status info">Analyzing your symptoms...</div>
+            <div id="diagnosisResult" class="terminal" aria-live="polite"></div>
+            <button id="confirmMedicine" class="btn hidden" type="button">Continue to Bill</button>
+        </section>
+
+        <section id="billingSection" class="hidden">
+            <div class="status success">Suggested care list prepared</div>
+            <div id="billDetails" class="terminal"></div>
+            <button id="placeOrder" class="btn" type="button">Place Order</button>
+        </section>
+
+        <section id="deliveryForm" class="hidden">
+            <div class="status warning">Checkout: do not use this to buy medicine without medical advice.</div>
+            <div class="form-group">
+                <label for="address">Delivery Address:</label>
+                <textarea id="address" rows="3" placeholder="Enter complete address" autocomplete="street-address"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" placeholder="Enter phone number" autocomplete="tel">
+            </div>
+            <div class="form-group payment-panel">
+                <label for="paymentMethod">Payment Method:</label>
+                <select id="paymentMethod">
+                    <option value="">Select payment method</option>
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="upi">UPI</option>
+                    <option value="card">Card</option>
+                    <option value="netbanking">Net Banking</option>
+                </select>
+
+                <div id="upiPaymentFields" class="payment-field hidden">
+                    <label for="upiId">UPI ID:</label>
+                    <input type="text" id="upiId" placeholder="example@upi" autocomplete="off">
+                </div>
+
+                <div id="cardPaymentFields" class="payment-field hidden">
+                    <div class="payment-grid">
+                        <div>
+                            <label for="cardName">Card Holder Name:</label>
+                            <input type="text" id="cardName" placeholder="Name on card" autocomplete="cc-name">
+                        </div>
+                        <div>
+                            <label for="cardNumber">Card Number:</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" inputmode="numeric" autocomplete="cc-number" maxlength="19">
+                        </div>
+                        <div>
+                            <label for="cardExpiry">Expiry:</label>
+                            <input type="text" id="cardExpiry" placeholder="MM/YY" autocomplete="cc-exp" maxlength="5">
+                        </div>
+                        <div>
+                            <label for="cardCvv">CVV:</label>
+                            <input type="password" id="cardCvv" placeholder="123" inputmode="numeric" autocomplete="cc-csc" maxlength="4">
+                        </div>
+                    </div>
+                    <p class="payment-note">Demo only: full card number and CVV are checked in the browser but not saved.</p>
+                </div>
+
+                <div id="netbankingPaymentFields" class="payment-field hidden">
+                    <label for="bankName">Select Bank:</label>
+                    <select id="bankName">
+                        <option value="">Select bank</option>
+                        <option value="State Bank of India">State Bank of India</option>
+                        <option value="HDFC Bank">HDFC Bank</option>
+                        <option value="ICICI Bank">ICICI Bank</option>
+                        <option value="Axis Bank">Axis Bank</option>
+                        <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
+                    </select>
+                </div>
+            </div>
+            <button id="confirmOrder" class="btn" type="button">Confirm Order</button>
+        </section>
+
+        <section id="orderComplete" class="hidden">
+            <div class="status success">Order successfully placed</div>
+            <div id="orderDetails" class="terminal"></div>
+            <button id="newConsultation" class="btn" type="button">New Consultation</button>
+        </section>
+    </main>
+
+    <script>
+        const sections = [
+            "welcomeSection",
+            "patientForm",
+            "diagnosisSection",
+            "billingSection",
+            "deliveryForm",
+            "orderComplete"
+        ];
+
+        let typingTimer = null;
+        let currentDiagnosis = null;
+        let currentPatient = null;
+        let symptomRecognition = null;
+        let isListeningForSymptoms = false;
+
+        document.getElementById("startBtn").addEventListener("click", startConsultation);
+        document.getElementById("submitDetails").addEventListener("click", submitPatientDetails);
+        document.getElementById("confirmMedicine").addEventListener("click", confirmMedicines);
+        document.getElementById("placeOrder").addEventListener("click", showDeliveryForm);
+        document.getElementById("confirmOrder").addEventListener("click", placeOrder);
+        document.getElementById("newConsultation").addEventListener("click", resetConsultation);
+        document.getElementById("voiceSymptoms").addEventListener("click", toggleSymptomVoiceInput);
+        document.getElementById("paymentMethod").addEventListener("change", updatePaymentFields);
+
+        initializeSymptomVoiceInput();
+        updatePaymentFields();
+
+        function startConsultation() {
+            showStep("patientForm");
+        }
+
+        function initializeSymptomVoiceInput() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const voiceButton = document.getElementById("voiceSymptoms");
+            const voiceStatus = document.getElementById("voiceStatus");
+
+            if (!SpeechRecognition) {
+                voiceButton.disabled = true;
+                voiceButton.textContent = "Voice Not Supported";
+                voiceStatus.textContent = "Type symptoms manually in this browser.";
+                return;
+            }
+
+            symptomRecognition = new SpeechRecognition();
+            symptomRecognition.lang = "en-IN";
+            symptomRecognition.continuous = false;
+            symptomRecognition.interimResults = true;
+
+            symptomRecognition.onstart = () => {
+                isListeningForSymptoms = true;
+                voiceButton.classList.add("listening");
+                voiceButton.textContent = "Stop Listening";
+                voiceStatus.textContent = "Listening...";
+            };
+
+            symptomRecognition.onresult = (event) => {
+                let finalText = "";
+                let interimText = "";
+
+                for (let index = event.resultIndex; index < event.results.length; index += 1) {
+                    const transcript = event.results[index][0].transcript.trim();
+                    if (event.results[index].isFinal) {
+                        finalText += transcript;
+                    } else {
+                        interimText += transcript;
+                    }
+                }
+
+                if (finalText) {
+                    addSpokenSymptoms(finalText);
+                    voiceStatus.textContent = "Symptoms added.";
+                } else if (interimText) {
+                    voiceStatus.textContent = `Heard: ${interimText}`;
+                }
+            };
+
+            symptomRecognition.onerror = (event) => {
+                voiceStatus.textContent = event.error === "not-allowed"
+                    ? "Microphone permission was blocked."
+                    : "Voice input stopped. Try again.";
+            };
+
+            symptomRecognition.onend = () => {
+                isListeningForSymptoms = false;
+                voiceButton.classList.remove("listening");
+                voiceButton.textContent = "Speak Symptoms";
+            };
+        }
+
+        function toggleSymptomVoiceInput() {
+            if (!symptomRecognition) {
+                return;
+            }
+
+            if (isListeningForSymptoms) {
+                symptomRecognition.stop();
+            } else {
+                document.getElementById("voiceStatus").textContent = "";
+                symptomRecognition.start();
+            }
+        }
+
+        function addSpokenSymptoms(transcript) {
+            const symptomsInput = document.getElementById("symptoms");
+            const spokenSymptoms = cleanSpokenSymptoms(transcript);
+
+            if (!spokenSymptoms) {
+                return;
+            }
+
+            symptomsInput.value = symptomsInput.value.trim()
+                ? `${symptomsInput.value.trim()}, ${spokenSymptoms}`
+                : spokenSymptoms;
+            symptomsInput.focus();
+        }
+
+        function cleanSpokenSymptoms(text) {
+            return text
+                .toLowerCase()
+                .replace(/\bcomma\b/g, ",")
+                .replace(/\band\b/g, ",")
+                .replace(/[.?!]/g, "")
+                .replace(/\s*,\s*/g, ", ")
+                .replace(/\s+/g, " ")
+                .replace(/,\s*,/g, ",")
+                .replace(/^,\s*|\s*,$/g, "")
+                .trim();
+        }
+
+        async function submitPatientDetails() {
+            const name = document.getElementById("name").value.trim();
+            const age = document.getElementById("age").value.trim();
+            const gender = document.getElementById("gender").value;
+            const symptoms = document.getElementById("symptoms").value.trim();
+
+            if (!name || !age || !gender || !symptoms) {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            const numericAge = Number(age);
+            if (!Number.isInteger(numericAge) || numericAge < 1 || numericAge > 120) {
+                alert("Please enter a valid age between 1 and 120.");
+                return;
+            }
+
+            showStep("diagnosisSection");
+            document.getElementById("confirmMedicine").classList.add("hidden");
+            typeWriter("Patient details received.\n\nAnalyzing symptoms...\n", "diagnosisResult");
+            currentPatient = { name, age, gender, symptoms };
+
+            try {
+                await wait(700);
+                currentDiagnosis = await requestDiagnosis(currentPatient);
+                const output = formatDiagnosis(currentPatient, currentDiagnosis);
+                typeWriter(output, "diagnosisResult", () => {
+                    document.getElementById("confirmMedicine").classList.remove("hidden");
+                });
+            } catch (error) {
+                currentDiagnosis = getDiagnosis(symptoms.toLowerCase());
+                const output = formatDiagnosis(currentPatient, currentDiagnosis);
+                typeWriter(`${output}\nNote: Prolog API was unavailable, so the browser handled this request.\n`, "diagnosisResult", () => {
+                    document.getElementById("confirmMedicine").classList.remove("hidden");
+                });
+            }
+        }
+
+        async function requestDiagnosis(patient) {
+            if (!isHttpPage()) {
+                return getDiagnosis(patient.symptoms.toLowerCase());
+            }
+
+            const params = new URLSearchParams({
+                name: patient.name,
+                age: patient.age,
+                gender: patient.gender,
+                symptoms: patient.symptoms
+            });
+            const response = await fetch(`/api?${params.toString()}`);
+
+            if (!response.ok) {
+                throw new Error("Diagnosis API request failed.");
+            }
+
+            return normalizeApiDiagnosis(await response.json());
+        }
+
+        function normalizeApiDiagnosis(result) {
+            return {
+                source: result.source || "prolog",
+                patient_id: result.patient_id || "",
+                diagnosis: result.diagnosis || [],
+                condition: result.diagnosis && result.diagnosis.length > 0
+                    ? result.diagnosis.map(formatLabel).join(", ")
+                    : "No disease found",
+                advice: result.advice || "Please consult a licensed doctor.",
+                medicines: (result.medicines || []).map((medicine) => ({
+                    disease: medicine.disease,
+                    name: medicine.name,
+                    dosage: medicine.dosage,
+                    instruction: medicine.instruction,
+                    costRange: medicine.costRange || medicine.cost_range || "",
+                    price: Number(medicine.price || 0)
+                })),
+                total: Number(result.total || 0)
+            };
+        }
+
+        function isHttpPage() {
+            return window.location.protocol === "http:" || window.location.protocol === "https:";
+        }
+
+        function wait(milliseconds) {
+            return new Promise((resolve) => setTimeout(resolve, milliseconds));
+        }
+
+        function getDiagnosis(symptoms) {
+            if (symptoms.includes("frequent urination") || symptoms.includes("excessive thirst") || symptoms.includes("blurred vision")) {
+                return {
+                    source: "browser ",
+                    diagnosis: ["diabetes"],
+                    condition: "Diabetes-related symptom pattern",
+                    advice: "Possible diabetes-related symptom pattern. Please consult a clinician for blood sugar testing and care.",
+                    medicines: [
+                        {
+                            name: "Metformin",
+                            dosage: "500mg tablet",
+                            instruction: "Use only with medical supervision. Discuss dosing and suitability with a clinician.",
+                            price: 15.50
+                        }
+                    ],
+                    total: 15.50
+                };
+            }
+
+            if (symptoms.includes("chest pain") || symptoms.includes("shortness of breath")) {
+                return {
+                    source: "browser ",
+                    diagnosis: ["hypertension"],
+                    condition: "Hypertension-related symptom pattern",
+                    advice: "These symptoms can be serious. Please contact emergency services or a clinician immediately.",
+                    medicines: [
+                        {
+                            name: "Amlodipine",
+                            dosage: "5mg tablet",
+                            instruction: "Use only if prescribed for blood pressure care by a clinician.",
+                            price: 12.00
+                        }
+                    ],
+                    total: 12.00
+                };
+            }
+
+            if (symptoms.includes("headache") || symptoms.includes("dizziness")) {
+                return {
+                    source: "browser ",
+                    diagnosis: ["hypertension"],
+                    condition: "Hypertension-related symptom pattern",
+                    advice: "Rest, hydrate, and monitor symptoms. Seek care if symptoms are severe, sudden, recurrent, or linked with weakness, vision changes, fainting, or confusion.",
+                    medicines: [
+                        {
+                            name: "Amlodipine",
+                            dosage: "5mg tablet",
+                            instruction: "Use only if prescribed for blood pressure care by a clinician.",
+                            price: 12.00
+                        }
+                    ],
+                    total: 12.00
+                };
+            }
+
+            if (symptoms.includes("fever") || symptoms.includes("cough") || symptoms.includes("cold") || symptoms.includes("runny nose") || symptoms.includes("sore throat")) {
+                return {
+                    source: "browser ",
+                    diagnosis: ["cold"],
+                    condition: "Cold or fever symptom pattern",
+                    advice: "Rest, fluids, and temperature monitoring may help. Seek care for high fever, breathing trouble, dehydration, symptoms lasting several days, or worsening condition.",
+                    medicines: [
+                        {
+                            name: "Paracetamol",
+                            dosage: "500mg tablet",
+                            instruction: "Discuss safe dose limits with a clinician or pharmacist. Avoid overdose.",
+                            price: 5.50
+                        }
+                    ],
+                    total: 5.50
+                };
+            }
+
+            if (symptoms.includes("stomach") || symptoms.includes("abdominal") || symptoms.includes("nausea") || symptoms.includes("vomit") || symptoms.includes("diarrhea")) {
+                return {
+                    source: "browser ",
+                    diagnosis: ["stomach_ache"],
+                    condition: "Stomach discomfort symptom pattern",
+                    advice: "Try small sips of fluids and bland food if tolerated. Seek care for severe pain, blood, persistent vomiting, dehydration, fever, or pregnancy.",
+                    medicines: [
+                        {
+                            name: "Omeprazole",
+                            dosage: "20mg capsule",
+                            instruction: "Discuss use with a clinician or pharmacist, especially if symptoms persist.",
+                            price: 8.75
+                        }
+                    ],
+                    total: 8.75
+                };
+            }
+
+            return {
+                source: "browser ",
+                diagnosis: [],
+                condition: "General symptom pattern",
+                advice: "Consider speaking with a clinician, especially if symptoms are severe, persistent, or unusual for you.",
+                medicines: [],
+                total: 0
+            };
+        }
+
+        function formatDiagnosis(patient, diagnosis) {
+            const sourceLabel = diagnosis.source === "prolog"
+                ? "Prolog result"
+                : diagnosis.source === "node"
+                    ? "Server result"
+                    : "Result";
+            const condition = diagnosis.condition || (
+                diagnosis.diagnosis && diagnosis.diagnosis.length > 0
+                    ? diagnosis.diagnosis.map(formatLabel).join(", ")
+                    : "No disease found"
+            );
+
+            let output = `Patient: ${patient.name}\n`;
+            output += `Age: ${patient.age}\n`;
+            output += `Gender: ${patient.gender}\n\n`;
+            if (diagnosis.patient_id) {
+                output += `Saved Record ID: ${diagnosis.patient_id}\n\n`;
+            }
+            output += `Symptoms: ${patient.symptoms}\n\n`;
+            output += `${sourceLabel}: ${condition}\n`;
+            output += `Advice: ${diagnosis.advice}\n\n`;
+
+            if (diagnosis.medicines.length > 0) {
+                output += "Suggested discussion list:\n";
+                diagnosis.medicines.forEach((medicine) => {
+                    const costText = medicine.costRange || `₹${medicine.price.toFixed(2)}`;
+                    output += `- ${formatLabel(medicine.name)} (${medicine.dosage})\n`;
+                    output += `  Note: ${medicine.instruction}\n`;
+                    output += `  Approx. Cost: ${costText}\n\n`;
+                });
+                output += `Approx. Total: ₹${diagnosis.total.toFixed(2)}\n`;
+            } else {
+                output += "No medicine list .\n";
+            }
+
+            return output;
+        }
+
+        function formatLabel(value) {
+            return String(value)
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (letter) => letter.toUpperCase());
+        }
+
+        function confirmMedicines() {
+            showStep("billingSection");
+            document.getElementById("billDetails").textContent = document.getElementById("diagnosisResult").textContent;
+        }
+
+        function showDeliveryForm() {
+            showStep("deliveryForm");
+        }
+
+        function updatePaymentFields() {
+            const method = document.getElementById("paymentMethod").value;
+            const fieldMap = {
+                upi: "upiPaymentFields",
+                card: "cardPaymentFields",
+                netbanking: "netbankingPaymentFields"
+            };
+
+            Object.values(fieldMap).forEach((id) => {
+                document.getElementById(id).classList.add("hidden");
+            });
+
+            if (fieldMap[method]) {
+                document.getElementById(fieldMap[method]).classList.remove("hidden");
+            }
+        }
+
+        function getPaymentDetails() {
+            const method = document.getElementById("paymentMethod").value;
+
+            if (!method) {
+                alert("Please select a payment method.");
+                return null;
+            }
+
+            if (method === "cod") {
+                return {
+                    method,
+                    label: "Cash on Delivery",
+                    reference: "Pay at delivery"
+                };
+            }
+
+            if (method === "upi") {
+                const upiId = document.getElementById("upiId").value.trim();
+                if (!upiId || !upiId.includes("@")) {
+                    alert("Please enter a valid UPI ID, for example name@upi.");
+                    return null;
+                }
+
+                return {
+                    method,
+                    label: "UPI",
+                    reference: upiId
+                };
+            }
+
+            if (method === "card") {
+                const cardNumber = document.getElementById("cardNumber").value.replace(/\D/g, "");
+                const expiry = document.getElementById("cardExpiry").value.trim();
+                const cvv = document.getElementById("cardCvv").value.replace(/\D/g, "");
+
+                if (cardNumber.length < 12 || cardNumber.length > 19) {
+                    alert("Please enter a valid card number.");
+                    return null;
+                }
+
+                if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+                    alert("Please enter card expiry as MM/YY.");
+                    return null;
+                }
+
+                if (cvv.length < 3 || cvv.length > 4) {
+                    alert("Please enter a valid CVV.");
+                    return null;
+                }
+
+                return {
+                    method,
+                    label: "Card",
+                    reference: `Card ending ${cardNumber.slice(-4)}`
+                };
+            }
+
+            if (method === "netbanking") {
+                const bankName = document.getElementById("bankName").value;
+                if (!bankName) {
+                    alert("Please select a bank.");
+                    return null;
+                }
+
+                return {
+                    method,
+                    label: "Net Banking",
+                    reference: bankName
+                };
+            }
+
+            return null;
+        }
+
+        async function placeOrder() {
+            const address = document.getElementById("address").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+
+            if (!address || !phone) {
+                alert("Please enter address and phone number.");
+                return;
+            }
+
+            if (phone.replace(/\D/g, "").length < 10) {
+                alert("Please enter a valid phone number.");
+                return;
+            }
+
+            const payment = getPaymentDetails();
+            if (!payment) {
+                return;
+            }
+
+            showStep("orderComplete");
+
+            const name = currentPatient ? currentPatient.name : document.getElementById("name").value.trim();
+            const total = currentDiagnosis ? currentDiagnosis.total : 0;
+            let order = {
+                order_id: `#${Math.floor(10000 + Math.random() * 90000)}`,
+                status: "Order placed",
+                payment
+            };
+
+            if (isHttpPage()) {
+                try {
+                    const params = new URLSearchParams({
+                        name,
+                        phone,
+                        address,
+                        total: String(total),
+                        paymentMethod: payment.method,
+                        paymentLabel: payment.label,
+                        paymentReference: payment.reference
+                    });
+                    const response = await fetch(`/order?${params.toString()}`);
+                    if (response.ok) {
+                        order = await response.json();
+                    }
+                } catch (error) {
+                    order.status = "Order placed locally";
+                }
+            }
+
+            const orderPayment = order.payment || payment;
+
+            document.getElementById("orderDetails").textContent =
+                `Order ID: ${order.order_id}\n` +
+                `Patient: ${name}\n` +
+                `Total Amount: ₹${total.toFixed(2)}\n` +
+                `Delivery Address: ${address}\n` +
+                `Phone: ${phone}\n` +
+                `Payment: ${orderPayment.label}\n` +
+                `Payment Detail: ${orderPayment.reference}\n` +
+                `Status: ${formatLabel(order.status)}\n\n` +
+                "Reminder: use this project for learning only, not real medical purchasing or treatment.";
+        }
+
+        function resetConsultation() {
+            clearInterval(typingTimer);
+            typingTimer = null;
+            currentDiagnosis = null;
+            currentPatient = null;
+
+            document.getElementById("name").value = "";
+            document.getElementById("age").value = "";
+            document.getElementById("gender").value = "";
+            document.getElementById("symptoms").value = "";
+            document.getElementById("address").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("paymentMethod").value = "";
+            document.getElementById("upiId").value = "";
+            document.getElementById("cardName").value = "";
+            document.getElementById("cardNumber").value = "";
+            document.getElementById("cardExpiry").value = "";
+            document.getElementById("cardCvv").value = "";
+            document.getElementById("bankName").value = "";
+            document.getElementById("diagnosisResult").textContent = "";
+            document.getElementById("billDetails").textContent = "";
+            document.getElementById("orderDetails").textContent = "";
+            document.getElementById("voiceStatus").textContent = "";
+            document.getElementById("confirmMedicine").classList.add("hidden");
+            updatePaymentFields();
+
+            showStep("welcomeSection");
+        }
+
+        function showStep(sectionId) {
+            sections.forEach((id) => {
+                document.getElementById(id).classList.add("hidden");
+            });
+            document.getElementById(sectionId).classList.remove("hidden");
+        }
+
+        function typeWriter(text, elementId, onComplete) {
+            clearInterval(typingTimer);
+            const element = document.getElementById(elementId);
+            element.textContent = "";
+
+            let index = 0;
+            typingTimer = setInterval(() => {
+                element.textContent += text.charAt(index);
+                element.scrollTop = element.scrollHeight;
+                index += 1;
+
+                if (index >= text.length) {
+                    clearInterval(typingTimer);
+                    typingTimer = null;
+                    if (typeof onComplete === "function") {
+                        onComplete();
+                    }
+                }
+            }, 12);
+        }
+    </script>
+</body>
+</html>

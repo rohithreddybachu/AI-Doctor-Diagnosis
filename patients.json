@@ -1,0 +1,189 @@
+[
+  {
+    "patient_id": "PAT-1777305911746-556",
+    "created_at": "2026-04-27T16:05:11.746Z",
+    "name": "fcjdk",
+    "age": 20,
+    "sex": "M",
+    "gender": "M",
+    "symptoms_text": "fever",
+    "symptoms": [
+      "fever"
+    ],
+    "diagnosis": [
+      "cold"
+    ],
+    "medicines": [
+      {
+        "disease": "cold",
+        "name": "paracetamol",
+        "dosage": "500mg",
+        "instruction": "Discuss safe dose limits with a clinician or pharmacist. Avoid overdose.",
+        "price": 5.5
+      }
+    ],
+    "total": 5.5,
+    "advice": "Possible cold or fever symptom pattern. Rest, hydrate, and seek care if symptoms worsen or breathing becomes difficult."
+  },
+  {
+    "patient_id": "PAT-1777306254513-522",
+    "created_at": "2026-04-27T16:10:54.513Z",
+    "name": "rohithreddy bachu.",
+    "age": 21,
+    "sex": "M",
+    "gender": "M",
+    "symptoms_text": "fever, headache",
+    "symptoms": [
+      "fever",
+      "headache"
+    ],
+    "diagnosis": [
+      "cold",
+      "hypertension"
+    ],
+    "medicines": [
+      {
+        "disease": "cold",
+        "name": "paracetamol",
+        "dosage": "500mg",
+        "instruction": "Discuss safe dose limits with a clinician or pharmacist. Avoid overdose.",
+        "price": 5.5
+      },
+      {
+        "disease": "hypertension",
+        "name": "amlodipine",
+        "dosage": "5mg",
+        "instruction": "Use only if prescribed for blood pressure care by a clinician.",
+        "price": 12
+      }
+    ],
+    "total": 17.5,
+    "advice": "Possible cold or fever symptom pattern. Rest, hydrate, and seek care if symptoms worsen or breathing becomes difficult. Possible hypertension-related symptom pattern. Seek urgent care for chest pain or breathing difficulty."
+  },
+  {
+    "patient_id": "PAT-1777306346541-541",
+    "created_at": "2026-04-27T16:12:26.541Z",
+    "name": "rohithreddy bachu.",
+    "age": 56,
+    "sex": "M",
+    "gender": "M",
+    "symptoms_text": "cough, headache, fever, stomach pain",
+    "symptoms": [
+      "cough",
+      "headache",
+      "fever",
+      "abdominal_pain"
+    ],
+    "diagnosis": [
+      "cold",
+      "hypertension",
+      "stomach_ache"
+    ],
+    "medicines": [
+      {
+        "disease": "cold",
+        "name": "paracetamol",
+        "dosage": "500mg",
+        "instruction": "Discuss safe dose limits with a clinician or pharmacist. Avoid overdose.",
+        "price": 5.5
+      },
+      {
+        "disease": "hypertension",
+        "name": "amlodipine",
+        "dosage": "5mg",
+        "instruction": "Use only if prescribed for blood pressure care by a clinician.",
+        "price": 12
+      },
+      {
+        "disease": "stomach_ache",
+        "name": "omeprazole",
+        "dosage": "20mg",
+        "instruction": "Discuss use with a clinician or pharmacist, especially if symptoms persist.",
+        "price": 8.75
+      }
+    ],
+    "total": 26.25,
+    "advice": "Possible cold or fever symptom pattern. Rest, hydrate, and seek care if symptoms worsen or breathing becomes difficult. Possible hypertension-related symptom pattern. Seek urgent care for chest pain or breathing difficulty. Possible stomach discomfort pattern. Seek care for severe pain, blood, dehydration, persistent vomiting, or pregnancy."
+  },
+  {
+    "patient_id": "PAT-1777306695392-826",
+    "created_at": "2026-04-27T16:18:15.392Z",
+    "name": "rohithreddy bachu.",
+    "age": 21,
+    "sex": "M",
+    "gender": "M",
+    "symptoms_text": "fever",
+    "symptoms": [
+      "fever"
+    ],
+    "diagnosis": [
+      "cold"
+    ],
+    "medicines": [
+      {
+        "disease": "cold",
+        "name": "paracetamol",
+        "dosage": "500mg",
+        "instruction": "Discuss safe dose limits with a clinician or pharmacist. Avoid overdose.",
+        "price": 5.5
+      }
+    ],
+    "total": 5.5,
+    "advice": "Possible cold or fever symptom pattern. Rest, hydrate, and seek care if symptoms worsen or breathing becomes difficult."
+  },
+  {
+    "patient_id": "PAT-1777306814311-552",
+    "created_at": "2026-04-27T16:20:14.311Z",
+    "name": "rohith",
+    "age": 20,
+    "sex": "M",
+    "gender": "M",
+    "symptoms_text": "fever",
+    "symptoms": [
+      "fever"
+    ],
+    "diagnosis": [
+      "cold"
+    ],
+    "medicines": [
+      {
+        "disease": "cold",
+        "name": "paracetamol",
+        "dosage": "500mg",
+        "instruction": "Discuss safe dose limits with a clinician or pharmacist. Avoid overdose.",
+        "price": 5.5
+      }
+    ],
+    "total": 5.5,
+    "advice": "Possible cold or fever symptom pattern. Rest, hydrate, and seek care if symptoms worsen or breathing becomes difficult."
+  },
+  {
+    "patient_id": "PAT-1777307987806-501",
+    "created_at": "2026-04-27T16:39:47.806Z",
+    "name": "rohith",
+    "age": 21,
+    "sex": "M",
+    "gender": "M",
+    "symptoms_text": "sneezing, sore throat, cough",
+    "symptoms": [
+      "sneezing",
+      "sore_throat",
+      "cough"
+    ],
+    "diagnosis": [
+      "common_cold"
+    ],
+    "medicines": [
+      {
+        "disease": "common_cold",
+        "name": "paracetamol",
+        "dosage": "500mg",
+        "instruction": "Use only as directed by a clinician or pharmacist.",
+        "price": 27.5,
+        "costRange": "₹15-40"
+      }
+    ],
+    "total": 27.5,
+    "advice": "Possible common cold pattern. Rest, fluids, and monitoring may help."
+  }
+]
