@@ -1,0 +1,9 @@
+{
+  "name": "ai-doctor-diagnosis",
+  "version": "1.0.0",
+  "description": "AI Doctor Diagnosis System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
